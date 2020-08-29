@@ -1,6 +1,7 @@
 package com.sanix.RecipeApp.domain;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Recipe {
@@ -17,11 +18,16 @@ public class Recipe {
     private String url;
     private String direction;
 
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="recipe")//related name of recipe from
+    private Set<Ingredient> ingredients; //ingredient model
+
     @Lob
     private Byte[] image;
 
-    @OneToOne(cascade= CascadeType.ALL)
-    private Notes notes;
+    @OneToOne(cascade= CascadeType.ALL)//If we remove the note object, the recipe
+    private Notes notes;//will remain in the database
+
+
 
     public String getDescription() {
         return description;
