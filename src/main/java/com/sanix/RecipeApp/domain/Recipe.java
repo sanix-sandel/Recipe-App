@@ -24,6 +24,9 @@ public class Recipe {
     @Lob
     private Byte[] image;
 
+    @Enumerated(value=EnumType.STRING)
+    private Difficulty difficulty;
+
     @OneToOne(cascade= CascadeType.ALL)//If we remove the note object, the recipe
     private Notes notes;//will remain in the database
 
@@ -99,5 +102,13 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 }
