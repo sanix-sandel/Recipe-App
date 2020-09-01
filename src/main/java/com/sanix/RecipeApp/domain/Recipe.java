@@ -1,51 +1,54 @@
 package com.sanix.RecipeApp.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String description;
     private Integer prepTime;
     private Integer cookTime;
     private Integer servings;
-    private String Source;
+    private String source;
     private String url;
-    private String direction;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="recipe")//related name of recipe from
-    private Set<Ingredient> ingredients; //ingredient model
+    @Lob
+    private String directions;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    private Set<Ingredient> ingredients = new HashSet<>();
 
     @Lob
     private Byte[] image;
 
-    @Enumerated(value=EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-    @OneToOne(cascade= CascadeType.ALL)//If we remove the note object, the recipe
-    private Notes notes;//will remain in the database
+    @OneToOne(cascade = CascadeType.ALL)
+    private Notes notes;
 
     @ManyToMany
-    @JoinTable(name="recipe_category",
-            joinColumns=@JoinColumn(name="recipe_id"),
-            inverseJoinColumns=@JoinColumn(name="category_id"))
-    private Set<Category> categories;
+    @JoinTable(name = "recipe_category",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getDescription() {
         return description;
-    }
-
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
     }
 
     public void setDescription(String description) {
@@ -77,11 +80,11 @@ public class Recipe {
     }
 
     public String getSource() {
-        return Source;
+        return source;
     }
 
     public void setSource(String source) {
-        Source = source;
+        this.source = source;
     }
 
     public String getUrl() {
@@ -92,12 +95,12 @@ public class Recipe {
         this.url = url;
     }
 
-    public String getDirection() {
-        return direction;
+    public String getDirections() {
+        return directions;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setDirections(String directions) {
+        this.directions = directions;
     }
 
     public Byte[] getImage() {
@@ -114,6 +117,21 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+        notes.setRecipe(this);
+    }
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return this;
+    }
+
+    public Set<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(Set<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
     public Difficulty getDifficulty() {
@@ -122,5 +140,13 @@ public class Recipe {
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 }
