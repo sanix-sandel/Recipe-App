@@ -7,6 +7,7 @@ import com.sanix.RecipeApp.domain.Recipe;
 import com.sanix.RecipeApp.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -45,6 +46,12 @@ public class RecipeServiceImpl implements RecipeService{
         }
 
         return recipeOptional.get();
+    }
+
+    @Override
+    @Transactional
+    public RecipeCommand findCommandById(Long l){
+        return recipeToRecipeCommand.convert(findById(l));
     }
 
     @Override
